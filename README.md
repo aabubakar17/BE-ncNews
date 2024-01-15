@@ -27,7 +27,6 @@ Confirm that your .gitignore file includes the following lines to prevent the se
 
 ```
 .env.test
-
 .env.development
 ```
 
