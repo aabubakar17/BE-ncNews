@@ -25,6 +25,7 @@ describe("app", () => {
           .then(({ body }) => {
             const { topics } = body;
             expect(Array.isArray(topics)).toEqual(true);
+            expect(topics.length).toEqual(3);
             topics.forEach((topic) => {
               expect(typeof topic.slug).toBe("string");
               expect(typeof topic.description).toBe("string");
@@ -32,7 +33,12 @@ describe("app", () => {
           });
       });
       test("GET: 404 responds with an appropiate status when provided with a bad route(route not available)", () => {
-        return request(app).get("/api/animals").expect(404);
+        return request(app)
+          .get("/api/animals")
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("route not found");
+          });
       });
     });
     test("GET: 200 reponds with an appropiate status code and a object of all the available endpoints of the api", () => {
