@@ -6,12 +6,17 @@ const {
   getArticleById,
   getArticles,
   getCommentsByArticleId,
+  postCommentsByArticleId,
 } = require("./Controller/app.controller");
 
 const {
   articleNotFoundError,
   invalidArticleError,
+  invalidRequestBodyError,
+  NoRequestBodyError,
 } = require("./Controller/errors.controllers");
+
+app.use(express.json());
 
 app.get("/api/topics", getTopics);
 
@@ -23,8 +28,12 @@ app.get("/api/articles", getArticles);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
+app.post("/api/articles/:article_id/comments", postCommentsByArticleId);
+
 app.use(articleNotFoundError);
 app.use(invalidArticleError);
+app.use(invalidRequestBodyError);
+app.use(NoRequestBodyError);
 
 app.use((req, res) => {
   res.status(404).send({ msg: "route not found" });

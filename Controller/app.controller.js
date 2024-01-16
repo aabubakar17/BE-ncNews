@@ -4,6 +4,7 @@ const {
   findArticleById,
   fetchArticles,
   findCommentsByArticleId,
+  insertComment,
 } = require("../Model/app.model");
 const { checkArticleExist } = require("./utils.controller");
 
@@ -32,7 +33,6 @@ exports.getArticleById = (req, res, next) => {
 
 exports.getArticles = (req, res) => {
   fetchArticles().then((articles) => {
-    console.log({ articles });
     res.status(200).send({ articles });
   });
 };
@@ -44,6 +44,27 @@ exports.getCommentsByArticleId = (req, res, next) => {
     .then((response) => {
       const comments = response[0];
       res.status(200).send({ comments });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.postCommentsByArticleId = (req, res, next) => {
+  const newComment = req.body;
+  const { article_id } = req.params;
+
+  const articleExistenceQuery = checkArticleExist(article_id);
+  const queries = [articleExistenceQuery];
+  if (articleExistenceQuery.msg !== "Not Found") {
+    const insertCommentQuery = insertComment(article_id, newComment);
+    queries.push(insertCommentQuery);
+  }
+
+  Promise.all(queries)
+    .then((response) => {
+      const comment = response[1];
+      res.status(201).send({ comment });
     })
     .catch((err) => {
       next(err);

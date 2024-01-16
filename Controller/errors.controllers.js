@@ -13,3 +13,19 @@ exports.invalidArticleError = (err, req, res, next) => {
     next(err);
   }
 };
+
+exports.invalidRequestBodyError = (err, req, res, next) => {
+  if (err.code === "23503") {
+    res.status(400).send({ msg: "Invalid Schema. Bad Request" });
+  } else {
+    next(err);
+  }
+};
+
+exports.NoRequestBodyError = (err, req, res, next) => {
+  if (err.code === "23502") {
+    res.status(400).send({ msg: "No Request body. Bad Request" });
+  } else {
+    next(err);
+  }
+};
