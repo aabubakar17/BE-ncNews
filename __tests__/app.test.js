@@ -90,7 +90,7 @@ describe("app", () => {
           });
       });
       describe("GET: /comments", () => {
-        test.only("GET: 200 sends an appropiate status and array of comments for the given article_id", () => {
+        test("GET: 200 sends an appropiate status and array of comments for the given article_id", () => {
           return request(app)
             .get("/api/articles/1/comments")
             .expect(200)
@@ -107,7 +107,7 @@ describe("app", () => {
             });
         });
 
-        test.only("GET: 200 sends an appropiate status and array of comments for the given article_id with no comments", () => {
+        test("GET: 200 sends an appropiate status and array of comments for the given article_id with no comments", () => {
           return request(app)
             .get("/api/articles/10/comments")
             .expect(200)
@@ -117,13 +117,22 @@ describe("app", () => {
             });
         });
 
-        test.only("GET 404 send an appropiate status and error message when given a valid but non-existent id", () => {
+        test("GET 404 send an appropiate status and error message when given a valid but non-existent id", () => {
           return request(app)
             .get("/api/articles/1000/comments")
             .expect(404)
             .then(({ body }) => {
               const { msg } = body;
               expect(msg).toBe("article does not exist");
+            });
+        });
+        test("GET 400 send an appropiate status and error message when given an invalid id", () => {
+          return request(app)
+            .get("/api/articles/not-a-article/comments")
+            .expect(400)
+            .then(({ body }) => {
+              const { msg } = body;
+              expect(msg).toBe("Bad Request");
             });
         });
       });
