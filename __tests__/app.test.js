@@ -89,6 +89,53 @@ describe("app", () => {
             expect(msg).toBe("Bad Request");
           });
       });
+      describe("GET: /comments", () => {
+        test("GET: 200 sends an appropiate status and array of comments for the given article_id", () => {
+          return request(app)
+            .get("/api/articles/1/comments")
+            .expect(200)
+            .then(({ body }) => {
+              const { comments } = body;
+              comments.forEach((comment) => {
+                expect(typeof comment.comment_id).toBe("number");
+                expect(typeof comment.votes).toBe("number");
+                expect(typeof comment.created_at).toBe("string");
+                expect(typeof comment.author).toBe("string");
+                expect(typeof comment.body).toBe("string");
+                expect(typeof comment.article_id).toBe("number");
+              });
+            });
+        });
+
+        test("GET: 200 sends an appropiate status and array of comments for the given article_id with no comments", () => {
+          return request(app)
+            .get("/api/articles/10/comments")
+            .expect(200)
+            .then(({ body }) => {
+              const { comments } = body;
+              expect(comments).toEqual([]);
+            });
+        });
+
+        test("GET 404 send an appropiate status and error message when given a valid but non-existent id", () => {
+          return request(app)
+            .get("/api/articles/1000/comments")
+            .expect(404)
+            .then(({ body }) => {
+              const { msg } = body;
+              expect(msg).toBe("article does not exist");
+            });
+        });
+        test("GET 400 send an appropiate status and error message when given an invalid id", () => {
+          return request(app)
+            .get("/api/articles/not-a-article/comments")
+            .expect(400)
+            .then(({ body }) => {
+              const { msg } = body;
+              expect(msg).toBe("Bad Request");
+            });
+        });
+      });
     });
     describe("/articles ", () => {
       test("GET: 200 /articles", () => {
