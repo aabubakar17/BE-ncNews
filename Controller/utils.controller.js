@@ -8,3 +8,9 @@ exports.checkArticleExist = (article_id) => {
       }
     });
 };
+
+exports.checkNewVote = (newVote) => {
+  if (typeof newVote !== "number") {
+    return Promise.reject({ msg: "Incorrect Type" });
+  }
+};

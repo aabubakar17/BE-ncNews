@@ -17,6 +17,8 @@ exports.invalidArticleError = (err, req, res, next) => {
 exports.invalidRequestBodyError = (err, req, res, next) => {
   if (err.code === "23503") {
     res.status(400).send({ msg: "Invalid Schema. Bad Request" });
+  } else if (err.msg == "Incorrect Type") {
+    res.status(400).send({ msg: "Bad Request" });
   } else {
     next(err);
   }

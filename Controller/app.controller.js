@@ -5,8 +5,9 @@ const {
   fetchArticles,
   findCommentsByArticleId,
   insertComment,
+  updateArticleById,
 } = require("../Model/app.model");
-const { checkArticleExist } = require("./utils.controller");
+const { checkArticleExist, checkNewVote } = require("./utils.controller");
 
 exports.getTopics = (req, res) => {
   fetchTopics().then((topics) => {
@@ -67,6 +68,24 @@ exports.postCommentsByArticleId = (req, res, next) => {
       res.status(201).send({ comment });
     })
     .catch((err) => {
+      next(err);
+    });
+};
+
+exports.patchArticleById = (req, res, next) => {
+  const { article_id } = req.params;
+  const newVote = req.body.inc_votes;
+  const newVoteQuery = checkNewVote(newVote);
+  const UpdateArticleQuery = updateArticleById(article_id, newVote);
+  const articleExistenceQuery = checkArticleExist(article_id);
+
+  Promise.all([UpdateArticleQuery, newVoteQuery, articleExistenceQuery])
+    .then((response) => {
+      const article = response[0];
+      res.status(200).send({ article });
+    })
+    .catch((err) => {
+      console.log(err);
       next(err);
     });
 };

@@ -7,6 +7,7 @@ const {
   getArticles,
   getCommentsByArticleId,
   postCommentsByArticleId,
+  patchArticleById,
 } = require("./Controller/app.controller");
 
 const {
@@ -30,6 +31,8 @@ app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 app.post("/api/articles/:article_id/comments", postCommentsByArticleId);
 
+app.patch("/api/articles/:article_id", patchArticleById);
+
 app.use(articleNotFoundError);
 app.use(invalidArticleError);
 app.use(invalidRequestBodyError);
@@ -40,3 +43,12 @@ app.use((req, res) => {
 });
 
 module.exports = app;
+
+/*
+update articles vote
+[x] write test for patch
+[x] request body to have { inc_votes: newVote}
+[x] increment the vote using alter table 
+[x]. RETURNING* article
+[].errors 
+*/
