@@ -168,4 +168,87 @@ describe("app", () => {
       });
     });
   });
+
+  describe("POST /articles", () => {
+    describe("POST /articles/:article_id/comments", () => {
+      test("POST: 201 responds with an appropiate status code and inserts comment and sends back comment to the client ", () => {
+        const newComment = {
+          username: "butter_bridge",
+          body: "great read",
+        };
+        return request(app)
+          .post("/api/articles/1/comments")
+          .send(newComment)
+          .expect(201)
+          .then(({ body }) => {
+            const { comment } = body;
+            const returnedComment = {
+              comment_id: expect.any(Number),
+              body: "great read",
+              votes: 0,
+              author: "butter_bridge",
+              article_id: 1,
+            };
+            const created_at_time = new Date(comment.created_at).getTime();
+            const current_time = new Date().getTime();
+            expect(created_at_time).toBeGreaterThanOrEqual(current_time - 1000);
+            expect(comment).toMatchObject(returnedComment);
+          });
+      });
+
+      test("POST 404 send an appropiate status and error message when given a valid but non-existent id", () => {
+        const newComment = {
+          username: "butter_bridge",
+          body: "great read",
+        };
+        return request(app)
+          .post("/api/articles/1000/comments")
+          .send(newComment)
+          .expect(404)
+          .then(({ body }) => {
+            const { msg } = body;
+            expect(msg).toBe("article does not exist");
+          });
+      });
+      test("POST 400 send an appropiate status and error message when given an invalid id", () => {
+        const newComment = {
+          username: "butter_bridge",
+          body: "great read",
+        };
+        return request(app)
+          .post("/api/articles/not-a-article/comments")
+          .send(newComment)
+          .expect(400)
+          .then(({ body }) => {
+            const { msg } = body;
+            expect(msg).toBe("Bad Request");
+          });
+      });
+      test("POST 400 send an appropiate status and error message when given no request body", () => {
+        const newComment = {};
+        return request(app)
+          .post("/api/articles/1/comments")
+          .send(newComment)
+          .expect(400)
+          .then(({ body }) => {
+            const { msg } = body;
+            expect(msg).toBe("No Request body. Bad Request");
+          });
+      });
+      test("POST 400 send an appropiate status and error message with invalid schema", () => {
+        const newComment = {
+          username: 234,
+          body: "great read",
+        };
+        return request(app)
+          .post("/api/articles/1/comments")
+          .send(newComment)
+          .expect(400)
+          .then(({ body }) => {
+            const { msg } = body;
+            expect(msg).toBe("Invalid Schema. Bad Request");
+          });
+      });
+    });
+  });
 });

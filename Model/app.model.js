@@ -45,3 +45,16 @@ exports.findCommentsByArticleId = (article_id) => {
       return rows;
     });
 };
+
+exports.insertComment = (article_id, newComment) => {
+  ///const created_at = new Date();
+
+  return db
+    .query(
+      "INSERT INTO comments (body, votes, author, article_id, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING *;",
+      [newComment.body, 0, newComment.username, article_id, new Date()]
+    )
+    .then(({ rows }) => {
+      return rows[0];
+    });
+};
