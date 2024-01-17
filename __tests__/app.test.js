@@ -251,4 +251,80 @@ describe("app", () => {
       });
     });
   });
+  describe("PATCH /articles", () => {
+    describe("PATCH /articles/:article_id", () => {
+      test("PATCH: 200 responds with correct status code and the updated article object ", () => {
+        const updateVote = {
+          inc_votes: -100,
+        };
+        return request(app)
+          .patch("/api/articles/1")
+          .send(updateVote)
+          .then(({ body }) => {
+            const { article } = body;
+            const returnedArticle = {
+              article_id: 1,
+              title: "Living in the shadow of a great man",
+              topic: "mitch",
+              author: "butter_bridge",
+              body: "I find this existence challenging",
+              votes: 0,
+              article_img_url:
+                "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            };
+            expect(article).toMatchObject(returnedArticle);
+          });
+      });
+      test("PATCH 400 send an appropiate status and error message with invalid schema", () => {
+        const updateVote = {
+          inc_votes: "word",
+        };
+        return request(app)
+          .patch("/api/articles/1")
+          .send(updateVote)
+          .expect(400)
+          .then(({ body }) => {
+            const { msg } = body;
+            expect(msg).toBe("Bad Request");
+          });
+      });
+      test("PATCH 400 send an appropiate status and error message with when no request body", () => {
+        const updateVote = {};
+        return request(app)
+          .patch("/api/articles/1")
+          .send(updateVote)
+          .expect(400)
+          .then(({ body }) => {
+            const { msg } = body;
+            expect(msg).toBe("Bad Request");
+          });
+      });
+      test("PATCH 404 send an appropiate status and error message when given a valid but non-existent id", () => {
+        const updateVote = {
+          inc_votes: -100,
+        };
+        return request(app)
+          .patch("/api/articles/1000")
+          .send(updateVote)
+          .expect(404)
+          .then(({ body }) => {
+            const { msg } = body;
+            expect(msg).toBe("article does not exist");
+          });
+      });
+      test("PATCH 400 send an appropiate status and error message when given an invalid id", () => {
+        const updateVote = {
+          inc_votes: -100,
+        };
+        return request(app)
+          .patch("/api/articles/not-a-article")
+          .send(updateVote)
+          .expect(400)
+          .then(({ body }) => {
+            const { msg } = body;
+            expect(msg).toBe("Bad Request");
+          });
+      });
+    });
+  });
 });
