@@ -8,13 +8,15 @@ const {
   getCommentsByArticleId,
   postCommentsByArticleId,
   patchArticleById,
+  deleteCommentbyId,
 } = require("./Controller/app.controller");
 
 const {
   articleNotFoundError,
-  invalidArticleError,
+  invalidError,
   invalidRequestBodyError,
   NoRequestBodyError,
+  commentNotFoundError,
 } = require("./Controller/errors.controllers");
 
 app.use(express.json());
@@ -33,8 +35,11 @@ app.post("/api/articles/:article_id/comments", postCommentsByArticleId);
 
 app.patch("/api/articles/:article_id", patchArticleById);
 
+app.delete("/api/comments/:comment_id", deleteCommentbyId);
+
 app.use(articleNotFoundError);
-app.use(invalidArticleError);
+app.use(commentNotFoundError);
+app.use(invalidError);
 app.use(invalidRequestBodyError);
 app.use(NoRequestBodyError);
 
@@ -43,12 +48,3 @@ app.use((req, res) => {
 });
 
 module.exports = app;
-
-/*
-update articles vote
-[x] write test for patch
-[x] request body to have { inc_votes: newVote}
-[x] increment the vote using alter table 
-[x]. RETURNING* article
-[].errors 
-*/

@@ -6,6 +6,7 @@ const {
   findCommentsByArticleId,
   insertComment,
   updateArticleById,
+  removeCommentById,
 } = require("../Model/app.model");
 const { checkArticleExist, checkNewVote } = require("./utils.controller");
 
@@ -83,6 +84,19 @@ exports.patchArticleById = (req, res, next) => {
     .then((response) => {
       const article = response[0];
       res.status(200).send({ article });
+    })
+    .catch((err) => {
+      console.log(err);
+      next(err);
+    });
+};
+
+exports.deleteCommentbyId = (req, res, next) => {
+  const { comment_id } = req.params;
+  //console.log(comment_id);
+  removeCommentById(comment_id)
+    .then(() => {
+      res.status(204).send();
     })
     .catch((err) => {
       console.log(err);
