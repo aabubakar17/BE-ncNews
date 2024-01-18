@@ -88,6 +88,15 @@ describe("app", () => {
               expect(msg).toBe("Bad Request");
             });
         });
+        test("GET: 200 responds with appropiate status and should have a comment_count", () => {
+          return request(app)
+            .get("/api/articles/1")
+            .expect(200)
+            .then(({ body }) => {
+              const { article } = body;
+              expect(article.comment_count).toBe("11");
+            });
+        });
         describe("GET: /comments", () => {
           test("GET: 200 sends an appropiate status and array of comments for the given article_id", () => {
             return request(app)
