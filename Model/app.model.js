@@ -39,9 +39,6 @@ exports.fetchArticles = (topic) => {
   queryStr +=
     " GROUP BY articles.article_id, articles.topic, articles.title, articles.created_at, articles.author, articles.votes, articles.article_img_url ORDER BY articles.created_at DESC";
 
-  console.log(queryStr);
-  console.log("Query Values:", queryValues);
-
   return db.query(queryStr, queryValues).then(({ rows }) => {
     if (rows.length === 0) {
       return Promise.reject({ msg: "Topic Not Found" });
@@ -81,7 +78,6 @@ exports.updateArticleById = (article_id, newVote) => {
       [newVote, article_id]
     )
     .then(({ rows }) => {
-      console.log(rows);
       return rows[0];
     });
 };
@@ -92,7 +88,6 @@ exports.removeCommentById = (comment_id) => {
       comment_id,
     ])
     .then(({ rows }) => {
-      console.log(rows);
       if (rows.length === 0) {
         return Promise.reject({ msg: "Comment Not Found" });
       }

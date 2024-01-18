@@ -11,16 +11,24 @@ const {
 } = require("../Model/app.model");
 const { checkArticleExist, checkNewVote } = require("./utils.controller");
 
-exports.getTopics = (req, res) => {
-  fetchTopics().then((topics) => {
-    res.status(200).send({ topics });
-  });
+exports.getTopics = (req, res, next) => {
+  fetchTopics()
+    .then((topics) => {
+      res.status(200).send({ topics });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
-exports.getEndpoints = (req, res) => {
-  fetchEndpoints().then((resEndpoints) => {
-    res.status(200).send({ resEndpoints });
-  });
+exports.getEndpoints = (req, res, next) => {
+  fetchEndpoints()
+    .then((resEndpoints) => {
+      res.status(200).send({ resEndpoints });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.getArticleById = (req, res, next) => {
@@ -93,26 +101,27 @@ exports.patchArticleById = (req, res, next) => {
       res.status(200).send({ article });
     })
     .catch((err) => {
-      console.log(err);
       next(err);
     });
 };
 
 exports.deleteCommentbyId = (req, res, next) => {
   const { comment_id } = req.params;
-  //console.log(comment_id);
   removeCommentById(comment_id)
     .then(() => {
       res.status(204).send();
     })
     .catch((err) => {
-      console.log(err);
       next(err);
     });
 };
 
-exports.getUsers = (req, res) => {
-  fetchUsers().then((users) => {
-    res.status(200).send({ users });
-  });
+exports.getUsers = (req, res, next) => {
+  fetchUsers()
+    .then((users) => {
+      res.status(200).send({ users });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
