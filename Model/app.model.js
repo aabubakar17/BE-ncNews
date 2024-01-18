@@ -43,9 +43,6 @@ exports.fetchArticles = (topic) => {
     " GROUP BY articles.article_id, articles.topic, articles.title, articles.created_at, articles.author, articles.votes, articles.article_img_url ORDER BY articles.created_at DESC";
 
   return db.query(queryStr, queryValues).then(({ rows }) => {
-    if (rows.length === 0) {
-      return Promise.reject({ msg: "Topic Not Found" });
-    }
     return rows;
   });
 };

@@ -196,14 +196,23 @@ describe("app", () => {
                 });
               });
           });
-        });
-        test("GET: 404 responds with an appropiate status when topic does not exist)", () => {
-          return request(app)
-            .get("/api/articles?topic=not-a-topic")
-            .expect(404)
-            .then(({ body }) => {
-              expect(body.msg).toBe("Topic Not Found");
-            });
+          test("GET: 200 responds with an appropiate status and empty object when topic exist and no article", () => {
+            return request(app)
+              .get("/api/articles?topic=paper")
+              .expect(200)
+              .then(({ body }) => {
+                const { articles } = body;
+                expect(Object.keys(articles).length).toEqual(0);
+              });
+          });
+          test("GET: 404 responds with an appropiate status when topic does not exist)", () => {
+            return request(app)
+              .get("/api/articles?topic=not-a-topic")
+              .expect(404)
+              .then(({ body }) => {
+                expect(body.msg).toBe("Topic Not Found");
+              });
+          });
         });
       });
     });

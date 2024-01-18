@@ -9,7 +9,11 @@ const {
   removeCommentById,
   fetchUsers,
 } = require("../Model/app.model");
-const { checkArticleExist, checkNewVote } = require("./utils.controller");
+const {
+  checkArticleExist,
+  checkNewVote,
+  checkTopicExist,
+} = require("./utils.controller");
 
 exports.getTopics = (req, res, next) => {
   fetchTopics()
@@ -44,8 +48,15 @@ exports.getArticleById = (req, res, next) => {
 
 exports.getArticles = (req, res, next) => {
   const { topic } = req.query;
-  fetchArticles(topic)
-    .then((articles) => {
+  const queries = [fetchArticles(topic)];
+  if (topic) {
+    const topicExistQuery = checkTopicExist(topic);
+    queries.push(topicExistQuery);
+  }
+
+  Promise.all(queries)
+    .then((response) => {
+      articles = response[0];
       res.status(200).send({ articles });
     })
     .catch((err) => {
