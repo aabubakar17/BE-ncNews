@@ -7,6 +7,7 @@ const {
   insertComment,
   updateArticleById,
   removeCommentById,
+  fetchUsers,
 } = require("../Model/app.model");
 const { checkArticleExist, checkNewVote } = require("./utils.controller");
 
@@ -102,4 +103,10 @@ exports.deleteCommentbyId = (req, res, next) => {
       console.log(err);
       next(err);
     });
+};
+
+exports.getUsers = (req, res) => {
+  fetchUsers().then((users) => {
+    res.status(200).send({ users });
+  });
 };
