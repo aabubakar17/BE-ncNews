@@ -137,7 +137,7 @@ describe("app", () => {
         });
       });
       describe("/articles ", () => {
-        test("GET: 200 /articles", () => {
+        test.only("GET: 200 /articles", () => {
           return request(app)
             .get("/api/articles")
             .expect(200)
@@ -157,12 +157,43 @@ describe("app", () => {
               });
             });
         });
-        test("GET: 404 responds with an appropiate status when provided with a bad route(route not available)", () => {
+        test.only("GET: 404 responds with an appropiate status when provided with a bad route(route not available)", () => {
           return request(app)
             .get("/api/animals")
             .expect(404)
             .then(({ body }) => {
               expect(body.msg).toBe("route not found");
+            });
+        });
+        describe("GET /articles(topic query)", () => {
+          test.only("GET: 200 should respond with appropiate status code and articles with correct topic", () => {
+            return request(app)
+              .get("/api/articles?topic=mitch")
+              .expect(200)
+              .then(({ body }) => {
+                const { articles } = body;
+                expect(Array.isArray(articles)).toEqual(true);
+                expect(articles.length).toEqual(12);
+                QueriedArticles = {
+                  title: expect.any(String),
+                  topic: "mitch",
+                  author: expect.any(String),
+                  created_at: expect.any(String),
+                  votes: expect.any(Number),
+                  article_img_url: expect.any(String),
+                };
+                articles.forEach((article) => {
+                  expect(article).toMatchObject(QueriedArticles);
+                });
+              });
+          });
+        });
+        test.only("GET: 404 responds with an appropiate status when topic does not exist)", () => {
+          return request(app)
+            .get("/api/articles?topic=not-a-topic")
+            .expect(404)
+            .then(({ body }) => {
+              expect(body.msg).toBe("Topic Not Found");
             });
         });
       });
@@ -352,7 +383,7 @@ describe("app", () => {
       });
     });
     describe("GET /api/users", () => {
-      test.only("GET : 200 reponds with appropiate status code and array of user objects", () => {
+      test("GET : 200 reponds with appropiate status code and array of user objects", () => {
         return request(app)
           .get("/api/users")
           .expect(200)
@@ -367,7 +398,7 @@ describe("app", () => {
             });
           });
       });
-      test.only("GET: 404 responds with an appropiate status when provided with a bad route(route not available)", () => {
+      test("GET: 404 responds with an appropiate status when provided with a bad route(route not available)", () => {
         return request(app)
           .get("/api/not-users")
           .expect(404)

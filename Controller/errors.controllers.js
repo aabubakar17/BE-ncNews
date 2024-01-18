@@ -39,3 +39,11 @@ exports.NoRequestBodyError = (err, req, res, next) => {
     next(err);
   }
 };
+
+exports.NotTopicError = (err, req, res, next) => {
+  if (err.msg === "Topic Not Found") {
+    res.status(404).send({ msg: err.msg });
+  } else {
+    next(err);
+  }
+};

@@ -25,14 +25,29 @@ exports.findArticleById = (article_id) => {
     });
 };
 
-exports.fetchArticles = (req, res) => {
-  return db
-    .query(
-      "SELECT articles.article_id, articles.topic, articles.title, articles.created_at, articles.author, articles.votes, articles.article_img_url, COUNT(comments.article_id) AS comment_count FROM comments RIGHT JOIN articles ON comments.article_id = articles.article_id GROUP BY articles.article_id, articles.topic, articles.title, articles.created_at, articles.author, articles.votes, articles.article_img_url ORDER BY articles.created_at DESC;"
-    )
-    .then(({ rows }) => {
-      return rows;
-    });
+exports.fetchArticles = (topic) => {
+  let queryStr =
+    "SELECT articles.article_id, articles.topic, articles.title, articles.created_at, articles.author, articles.votes, articles.article_img_url, COUNT(comments.article_id) AS comment_count FROM comments RIGHT JOIN articles ON comments.article_id = articles.article_id";
+
+  const queryValues = [];
+
+  if (topic) {
+    queryStr += " WHERE articles.topic = $1";
+    queryValues.push(topic);
+  }
+
+  queryStr +=
+    " GROUP BY articles.article_id, articles.topic, articles.title, articles.created_at, articles.author, articles.votes, articles.article_img_url ORDER BY articles.created_at DESC";
+
+  console.log(queryStr);
+  console.log("Query Values:", queryValues);
+
+  return db.query(queryStr, queryValues).then(({ rows }) => {
+    if (rows.length === 0) {
+      return Promise.reject({ msg: "Topic Not Found" });
+    }
+    return rows;
+  });
 };
 
 exports.findCommentsByArticleId = (article_id) => {

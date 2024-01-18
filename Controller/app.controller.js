@@ -34,11 +34,17 @@ exports.getArticleById = (req, res, next) => {
     });
 };
 
-exports.getArticles = (req, res) => {
-  fetchArticles().then((articles) => {
-    res.status(200).send({ articles });
-  });
+exports.getArticles = (req, res, next) => {
+  const { topic } = req.query;
+  fetchArticles(topic)
+    .then((articles) => {
+      res.status(200).send({ articles });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
+
 exports.getCommentsByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   const findCommentsQuery = findCommentsByArticleId(article_id);
