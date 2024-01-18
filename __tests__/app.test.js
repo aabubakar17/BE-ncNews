@@ -19,7 +19,7 @@ describe("app", () => {
       test("status code of 200", () => {
         return request(app).get("/api/topics").expect(200);
       });
-      test("reposne with an array of topics objects", () => {
+      test("response with an array of topics objects", () => {
         return request(app)
           .get("/api/topics")
           .then(({ body }) => {
@@ -349,6 +349,31 @@ describe("app", () => {
               expect(response.body.msg).toBe("Bad Request");
             });
         });
+      });
+    });
+    describe("GET /api/users", () => {
+      test.only("GET : 200 reponds with appropiate status code and array of user objects", () => {
+        return request(app)
+          .get("/api/users")
+          .expect(200)
+          .then(({ body }) => {
+            const { users } = body;
+            expect(Array.isArray(users)).toEqual(true);
+            expect(users.length).toEqual(4);
+            users.forEach((user) => {
+              expect(typeof user.username).toBe("string");
+              expect(typeof user.name).toBe("string");
+              expect(typeof user.avatar_url).toBe("string");
+            });
+          });
+      });
+      test.only("GET: 404 responds with an appropiate status when provided with a bad route(route not available)", () => {
+        return request(app)
+          .get("/api/not-users")
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("route not found");
+          });
       });
     });
   });
