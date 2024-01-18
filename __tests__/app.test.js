@@ -137,7 +137,7 @@ describe("app", () => {
         });
       });
       describe("/articles ", () => {
-        test.only("GET: 200 /articles", () => {
+        test("GET: 200 /articles", () => {
           return request(app)
             .get("/api/articles")
             .expect(200)
@@ -157,7 +157,7 @@ describe("app", () => {
               });
             });
         });
-        test.only("GET: 404 responds with an appropiate status when provided with a bad route(route not available)", () => {
+        test("GET: 404 responds with an appropiate status when provided with a bad route(route not available)", () => {
           return request(app)
             .get("/api/animals")
             .expect(404)
@@ -166,7 +166,7 @@ describe("app", () => {
             });
         });
         describe("GET /articles(topic query)", () => {
-          test.only("GET: 200 should respond with appropiate status code and articles with correct topic", () => {
+          test("GET: 200 should respond with appropiate status code and articles with correct topic", () => {
             return request(app)
               .get("/api/articles?topic=mitch")
               .expect(200)
@@ -188,7 +188,7 @@ describe("app", () => {
               });
           });
         });
-        test.only("GET: 404 responds with an appropiate status when topic does not exist)", () => {
+        test("GET: 404 responds with an appropiate status when topic does not exist)", () => {
           return request(app)
             .get("/api/articles?topic=not-a-topic")
             .expect(404)
