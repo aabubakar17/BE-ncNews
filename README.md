@@ -41,7 +41,7 @@ Before you begin, ensure you have the following minimum versions installed:
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/aabubakar17/BE-ncNews.git
+git clone https://github.com/aabubakar17/Worldly-Whispers.git
 cd be-nc-news
 ```
 
