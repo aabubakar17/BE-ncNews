@@ -47,3 +47,19 @@ exports.NotTopicError = (err, req, res, next) => {
     next(err);
   }
 };
+
+exports.invalidSortError = (err, req, res, next) => {
+  if (err.msg === "Invalid sort query") {
+    res.status(400).send({ msg: err.msg });
+  } else {
+    next(err);
+  }
+};
+
+exports.invalidOrderError = (err, req, res, next) => {
+  if (err.msg === "Invalid order query") {
+    res.status(400).send({ msg: err.msg });
+  } else {
+    next(err);
+  }
+};

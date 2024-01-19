@@ -13,6 +13,8 @@ const {
   checkArticleExist,
   checkNewVote,
   checkTopicExist,
+  checkSortQuery,
+  checkOrderQuery,
 } = require("./utils.controller");
 
 exports.getTopics = (req, res, next) => {
@@ -48,10 +50,19 @@ exports.getArticleById = (req, res, next) => {
 
 exports.getArticles = (req, res, next) => {
   const { topic } = req.query;
-  const queries = [fetchArticles(topic)];
+  const { sort_by } = req.query;
+  const { order } = req.query;
+
+  const queries = [fetchArticles(topic, sort_by, order)];
   if (topic) {
     const topicExistQuery = checkTopicExist(topic);
     queries.push(topicExistQuery);
+  } else if (sort_by) {
+    const sortExistQuery = checkSortQuery(sort_by);
+    queries.push(sortExistQuery);
+  } else if (order) {
+    const orderExistQuery = checkOrderQuery(order);
+    queries.push(orderExistQuery);
   }
 
   Promise.all(queries)
