@@ -24,3 +24,14 @@ exports.checkTopicExist = (topic) => {
       }
     });
 };
+
+exports.checkSortQuery = (sort_by) => {
+  if (!["title", "comment_count", "created_at"].includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "Invalid sort query" });
+  }
+};
+exports.checkOrderQuery = (order) => {
+  if (!["ASC", "DESC"].includes(order)) {
+    return Promise.reject({ status: 400, msg: "Invalid order query" });
+  }
+};

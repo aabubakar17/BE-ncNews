@@ -4,6 +4,7 @@ const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data/index");
 const app = require("../app");
 const endpoints = require("../endpoints.json");
+const toBeSorted = require("jest-sorted");
 
 afterAll(() => {
   return db.end();
@@ -145,7 +146,7 @@ describe("app", () => {
           });
         });
       });
-      describe("/articles ", () => {
+      describe("GET /articles ", () => {
         test("GET: 200 /articles", () => {
           return request(app)
             .get("/api/articles")
@@ -211,6 +212,36 @@ describe("app", () => {
               .expect(404)
               .then(({ body }) => {
                 expect(body.msg).toBe("Topic Not Found");
+              });
+          });
+        });
+        describe("GET /articles (sorting queries)", () => {
+          test.only("GET: 200 GET: 200 sends an array with articles sorted based on comment_count in ascending order", () => {
+            return request(app)
+              .get("/api/articles?sort_by=comment_count&order=ASC")
+              .expect(200)
+              .then((response) => {
+                console.log(response.body);
+                expect(response.body.articles).toBeSorted(
+                  { key: "comment_count" },
+                  { descending: true }
+                );
+              });
+          });
+          test.only("GET:400 sends an appropriate status and error message when given an invalid sortBy", () => {
+            return request(app)
+              .get("/api/articles?sort_by=not-a-sort")
+              .expect(400)
+              .then((response) => {
+                expect(response.body.msg).toBe("Invalid sort query");
+              });
+          });
+          test.only("GET:400 sends an appropriate status and error message when given an invalid order", () => {
+            return request(app)
+              .get("/api/articles?order=not-a-order")
+              .expect(400)
+              .then((response) => {
+                expect(response.body.msg).toBe("Invalid order query");
               });
           });
         });
