@@ -163,7 +163,7 @@ describe("app", () => {
                 expect(typeof article.created_at).toBe("string");
                 expect(typeof article.votes).toBe("number");
                 expect(typeof article.article_img_url).toBe("string");
-                expect(typeof article.comment_count).toBe("string");
+                expect(typeof article.comment_count).toBe("number");
               });
             });
         });
@@ -216,19 +216,18 @@ describe("app", () => {
           });
         });
         describe("GET /articles (sorting queries)", () => {
-          test.only("GET: 200 GET: 200 sends an array with articles sorted based on comment_count in ascending order", () => {
+          test("GET: 200 GET: 200 sends an array with articles sorted based on comment_count in ascending order", () => {
             return request(app)
               .get("/api/articles?sort_by=comment_count&order=ASC")
               .expect(200)
               .then((response) => {
-                console.log(response.body);
                 expect(response.body.articles).toBeSorted(
                   { key: "comment_count" },
                   { descending: true }
                 );
               });
           });
-          test.only("GET:400 sends an appropriate status and error message when given an invalid sortBy", () => {
+          test("GET:400 sends an appropriate status and error message when given an invalid sortBy", () => {
             return request(app)
               .get("/api/articles?sort_by=not-a-sort")
               .expect(400)
@@ -236,7 +235,7 @@ describe("app", () => {
                 expect(response.body.msg).toBe("Invalid sort query");
               });
           });
-          test.only("GET:400 sends an appropriate status and error message when given an invalid order", () => {
+          test("GET:400 sends an appropriate status and error message when given an invalid order", () => {
             return request(app)
               .get("/api/articles?order=not-a-order")
               .expect(400)

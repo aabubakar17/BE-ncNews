@@ -30,7 +30,6 @@ exports.findArticleById = (article_id) => {
 };
 
 exports.fetchArticles = (topic, sort_by = "created_at", order = "DESC") => {
-  console.log(sort_by);
   let queryStr =
     "SELECT articles.article_id, articles.topic, articles.title, articles.created_at, articles.author, articles.votes, articles.article_img_url, CAST(COUNT(comments.article_id) AS INTEGER)AS comment_count FROM comments RIGHT JOIN articles ON comments.article_id = articles.article_id";
 
@@ -42,8 +41,6 @@ exports.fetchArticles = (topic, sort_by = "created_at", order = "DESC") => {
   }
 
   queryStr += ` GROUP BY articles.article_id, articles.topic, articles.title, articles.created_at, articles.author, articles.votes, articles.article_img_url ORDER BY ${sort_by} ${order}`;
-
-  console.log(queryStr);
 
   return db.query(queryStr, queryValues).then(({ rows }) => {
     return rows;
