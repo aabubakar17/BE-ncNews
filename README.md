@@ -4,7 +4,7 @@
 
 Worldy Whispers is a Node.js-based backend project designed to manage articles, comments, topics, and users for a news app. This application provides a set of API endpoints for interacting with the various components of the app. These endpoints include but are not limited to:
 
-- Retrieving information on avaialable endpoints.
+- Retrieving information on available endpoints.
 - Getting a list of topics.
 - Fetching individual articles by ID.
 - Listing and updating articles.
@@ -64,7 +64,7 @@ npm run seed
 npm run test
 ```
 
-## Setting up Enviroment
+## Setting up environment
 
 To run this project locally, you'll need to set up environment variables. Follow these steps to create the necessary .env files
 
