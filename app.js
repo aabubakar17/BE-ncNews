@@ -12,6 +12,10 @@ const {
   getUsers,
 } = require("./Controller/app.controller");
 
+const cors = require("cors");
+
+app.use(cors());
+
 const {
   articleNotFoundError,
   invalidError,
